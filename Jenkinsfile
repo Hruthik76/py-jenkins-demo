@@ -2,41 +2,28 @@ pipeline {
     agent any
 
     environment {
-        VENV = 'venv'
+        IMAGE = 'hruthik76/py-jenkins-demo:latest'
     }
 
     stages {
-        stage ("Install") {
+        stage('Pull Docker Image') {
             steps {
+                echo "Pulling image: $IMAGE"
                 sh '''
-                    python3 -m venv $VENV
-                    . $VENV/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
+                    # Using Bash to pull the Docker image
+                    docker pull $IMAGE
                 '''
             }
         }
-        stage ("Linting") {
-            steps {
-                script {
-                    echo "This is my Linting Step"
-                }
-            }
-        }
-        stage ("Install Packages") {
-            steps {
-                script {
-                    echo "This is Install PAkcges Step"
-                }
-            }
-        }
-        stage ("Run Application") {
-            steps {
-                script {
-                    echo "This is my Run applcaition Step"
-                }
-            }
-        }
 
+        stage('Run Docker Container') {
+            steps {
+                echo "Running container from image: $IMAGE"
+                sh '''
+                    # Using Bash to run the Docker container
+                    docker run --rm $IMAGE
+                '''
+            }
+        }
     }
 }
